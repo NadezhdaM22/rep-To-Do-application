@@ -47,14 +47,27 @@ for (i=0; i<close.length; i++){
 
 
 // Create an opportunity to mark tasks  as completed (checked).
-// It doesn't work at all!
 
-var list = document.querySelector('ul');
-list.addEventListener('click', checked, false);
+var tasks = document.querySelectorAll('li');
+for (let i=0; i<tasks.length; i++){  
+tasks[i].addEventListener("click", check, false);
 
-function checked(ev) {
-if(ev.target.tagName === 'Li'){
-ev.target.classList.toggle('checked');
+    function check(event) {
+        tasks[i].className = "checked";
+    }
 }
-}
 
+
+
+
+    //const tasks = ['task1', 'task2', 'task3'];
+    //const data = JSON.stringify(tasks);
+        
+    //window.localStorage.setItem('tasks', data);
+    //const tasksRetrieved = window.localStorage.getItem('tasks');
+    //console.log(JSON.parse(tasksRetrieved));
+    
+        
+    
+
+        
