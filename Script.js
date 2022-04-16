@@ -8,66 +8,76 @@ jQuery(function(){
     'font-size': '16pt'});
 
 });
-  
+
+const tasks = [];
+
 // Make a function that allows create new tasks in our task list.
 
 function newElement(){
-    var li = document.createElement("li");
-    var inputValue = document.getElementById("myInput").value;
-    var t = document.createTextNode(inputValue);
-    li.appendChild(t);
-    if (inputValue === '') {
+    const value = document.getElementById('task-title').value;
+    if (value === '') {
      alert ("Поле не может быть пустым!")
-    } else{
-     document.getElementById("myUL").appendChild(li);
+    } 
+    else {
+     tasks.push(value);
+
+     saveToDataStorage();
+     render();
      }
     }
     
-// Make button "х" for removing tasks.
-// It doesn't work with new tasks!! Why??
+    // removing tasks
+    function close(index) {
+        return () => {
+          tasks.splice(index, 1);
+          
+          saveToDataStorage();
+          render();
+        }
+      }
+        
 
-var myNodelist = document.getElementsByTagName('li');
-var i;
-for (i=0; i<myNodelist.length; i++){
-var span = document.createElement("SPAN");
-var txt = document.createTextNode("\u00D7");
-span.className = "close";
-span.appendChild(txt);
-myNodelist[i].appendChild(span);    
+
+
+
+
+//Save tasks in localStorage
+
+function saveToDataStorage() {
+    window.localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
-var close = document.getElementsByClassName("close");
-var i;
-for (i=0; i<close.length; i++){
-    close[i].onclick = function(){
-        var div = this.parentElement;
-        div.style.display = "none";
+//Render the template.
+ 
+ function render() {
+    const tasksList = document.getElementById('tasks');
+    
+    while (tasksList.firstChild) {
+        tasksList.removeChild(tasksList.firstChild);
+    }
+    
+    tasks.forEach((task, index) => {
+       const closeT = document.createElement('span');
+       const closeSign = document.createTextNode('x');
+       closeT.classList.add('close');
+       closeT.appendChild(closeSign);
+       closeT.addEventListener('click', close(index));
+      
+       const taskLI = document.createElement("li");
+       const taskTitle = document.createTextNode(task);
+       taskLI.appendChild(taskTitle);
+       taskLI.appendChild(closeT);
+      
+       tasksList.appendChild(taskLI);
+    });
+ }
+
+ // Create an opportunity to mark tasks  as completed (checked).
+
+for (let i=0; i<tasksList.length; i++){  
+    tasksList[i].addEventListener("click", check, false);
+
+   function check(event) {
+    tasksList[i].className = "checked";
     }
 }
-
-
-// Create an opportunity to mark tasks  as completed (checked).
-
-var tasks = document.querySelectorAll('li');
-for (let i=0; i<tasks.length; i++){  
-tasks[i].addEventListener("click", check, false);
-
-    function check(event) {
-        tasks[i].className = "checked";
-    }
-}
-
-
-
-
-    //const tasks = ['task1', 'task2', 'task3'];
-    //const data = JSON.stringify(tasks);
-        
-    //window.localStorage.setItem('tasks', data);
-    //const tasksRetrieved = window.localStorage.getItem('tasks');
-    //console.log(JSON.parse(tasksRetrieved));
-    
-        
-    
-
-        
